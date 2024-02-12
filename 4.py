@@ -1,14 +1,15 @@
 import sys
+
 n, m = map(int, input().split())
-with open('exam.csv', 'w', encoding='utf=8') as file:
-    file.write("Фамилия;имя;результат 1;результат 2;результат 3;сумма\n")
+
+with open('exam.csv', 'w', encoding='utf-8') as file:
+    file.write("Surname;Name;Result 1;Result 2;Result 3;Total\n")
 
     while True:
         line = sys.stdin.readline().rstrip("\n")
-        if line == '':
+        if not line:
             break
-        surname, name, result1, result2, result3 = line.split()
-        result1, result2, result3 = int(result1), int(result2), int(result3)
-        total = result1 + result2 + result3
-        if total >= n and result1 >= m and result2 >= m and result3 >= m:
-            file.write(f"{surname};{name};{result1};{result2};{result3};{total}\n")
+        surname, name, *results = line.split()
+        results = [int(result) for result in results]
+        if sum(results) >= n and all(result >= m for result in results):
+            file.write(f"{surname};{name};{';'.join(map(str, results))};{sum(results)}\n")
